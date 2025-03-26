@@ -17,3 +17,10 @@ def hello_world():
 def despedir():
     return "<p>descansa</p>"
 #dos rutas y dos links
+
+@app.route("/hola")
+def saludar():
+    return "<h2>Hola!</h2>"
+@app.route("/hola/<string:nombre>") #el argumento nombre, se pasa por parametro en la ruta.
+def saludar_con_nombre (nombre):
+    return f"<h2>Hola {nombre}!</h2>"
