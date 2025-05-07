@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+from flask import Flask, url_for , render_template
 import sqlite3
 app = Flask(__name__)
 db=None
@@ -9,7 +9,7 @@ db=None
 #delet borra uno o mas registros de la tabla, si no pones where se borra todo, ? se guarda el nro
 
 @app.route("/insertar/<string:mail>/<string:email>")
-def testDB(usuario, email)
+def test(usuario, email):
     abrirConexion()
     cursor = db.cursor()
     cursor.execute("INSERT INTO usuario (usuarios, email) VALUES (?, ?)",(usuario, email))
@@ -151,3 +151,16 @@ def main():
     <br>
     <a href="{url_dado}">Tirar_dado</a>
     """
+@app.route("/mostrar-datos-plantilla/<int:id>")
+def datos_plantilla(id):
+    abrirConexion()
+    cursor = db.cursor()
+    cursor.execute("SELECT id, usuario, email FROM usuarios WHERE id = ?; ", (id,))
+    res = cursor.fetchone()
+    cerrarConexion()
+    usuario = None
+    email = None
+    if res != None:
+        usuario=res['usuario']
+        email=res['email']
+    return render_template("datos.html", id=id, usuario=usuario, email=email)
