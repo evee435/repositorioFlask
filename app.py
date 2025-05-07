@@ -102,7 +102,7 @@ def obtenerGente():
 #-----------------------------------------------------------------------------------------------------
 
 
-@app.route("/")  #devuelve lo q ve en el navegador, ruta
+@app.route("/dado/<int:dado>")  #devuelve lo q ve en el navegador, ruta
 def principal():
     url_hola = url_for("hello_world")
     #url_dado = url_for("dado", caras=6)
@@ -155,12 +155,26 @@ def main():
 def datos_plantilla(id):
     abrirConexion()
     cursor = db.cursor()
-    cursor.execute("SELECT id, usuario, email FROM usuarios WHERE id = ?; ", (id,))
+    cursor.execute("SELECT id, usuario, telefono, direccion, email FROM usuarios WHERE id = ?; ", (id,))
+    #lo definido en id permite que no siempre te muestre la misma fila, sino que te de un resultado segun el numero que ingreses
     res = cursor.fetchone()
     cerrarConexion()
-    usuario = None
+    usuario = None #valor nulo
     email = None
-    if res != None:
+    telefono = None
+    direccion = None
+    if res != None: #diccionario
         usuario=res['usuario']
         email=res['email']
-    return render_template("datos.html", id=id, usuario=usuario, email=email)
+        telefono=res['telefono']
+        direccion=res['direccion']
+
+    return render_template("datos.html", id=id, usuario=usuario, email=email, telefono=telefono, direccion=direccion)
+
+@app.route("/mostrarTodo-plantilla/<int:id>")
+def mostrarTodo_plantilla(id):
+    abrirConexion()
+    cursor = db.cursor()
+    cursor.execute("SELECT id, usuario, telefono, direccion, email FROM usuarios WHERE id = ?; ", (id,))
+    res = cursor.fetchone()
+    cerrarConexion()
